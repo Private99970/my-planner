@@ -59,7 +59,7 @@ function AppContent({ userId }) {
   }
 
   return (
-    <div className="min-h-dvh bg-slate-50 flex flex-col max-w-lg mx-auto">
+    <div className="min-h-dvh bg-slate-50 flex flex-col w-full">
       <Header title={TITLES[tab]} back={backBtn} action={!backBtn ? logoutBtn : null} />
 
       <div className="flex-1 overflow-y-auto flex flex-col">
