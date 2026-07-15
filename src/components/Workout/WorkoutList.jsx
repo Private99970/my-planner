@@ -20,15 +20,23 @@ export default function WorkoutList({ schede, loading, onSelect, onCreate, onDel
     )
   }
 
+  if (schede.length === 0 && !creating) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4 pb-8">
+        <p className="text-5xl">🏋️</p>
+        <p className="text-slate-400 text-sm text-center">Nessuna scheda ancora.<br />Crea la prima!</p>
+        <button
+          onClick={() => setCreating(true)}
+          className="btn-ind px-8 py-3 text-sm"
+        >
+          + Nuova scheda
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="px-4 pt-4 pb-8 flex flex-col gap-3">
-
-      {schede.length === 0 && !creating && (
-        <div className="text-center py-12 text-slate-400 text-sm">
-          <p className="text-3xl mb-2">🏋️</p>
-          <p>Nessuna scheda ancora.<br />Crea la prima!</p>
-        </div>
-      )}
 
       {schede.map(scheda => (
         <div key={scheda.id} className="bg-white rounded-xl border border-slate-100 flex">

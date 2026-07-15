@@ -193,12 +193,14 @@ export default function StatsSection({ userId }) {
       {/* Add measurement button / form */}
       <div className="px-4 pt-4">
         {!formOpen ? (
-          <button
-            onClick={() => setFormOpen(true)}
-            className="w-full btn-ind py-3 text-sm"
-          >
-            + Aggiungi misurazione
-          </button>
+          records.length > 0 && (
+            <button
+              onClick={() => setFormOpen(true)}
+              className="w-full btn-ind py-3 text-sm"
+            >
+              + Aggiungi misurazione
+            </button>
+          )
         ) : (
           <div className="bg-white rounded-2xl border border-slate-200 p-4 mb-4">
             <div className="flex items-center justify-between mb-3">
@@ -270,13 +272,16 @@ export default function StatsSection({ userId }) {
       </div>
 
       {/* History */}
-      <div className="px-4 pt-3">
+      <div className="px-4 pt-3 flex-1 flex flex-col">
         {loading ? (
           <p className="text-center text-slate-400 text-sm py-8">Caricamento…</p>
         ) : records.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-4xl mb-3">📏</div>
-            <p className="text-slate-400 text-sm">Nessuna misurazione ancora.<br />Registra la prima per iniziare a tracciare i progressi.</p>
+          <div className="flex-1 flex flex-col items-center justify-center gap-4">
+            <div className="text-5xl">📏</div>
+            <p className="text-slate-400 text-sm text-center">Nessuna misurazione ancora.<br />Registra la prima per iniziare a tracciare i progressi.</p>
+            <button onClick={() => setFormOpen(true)} className="btn-ind px-8 py-3 text-sm">
+              + Aggiungi misurazione
+            </button>
           </div>
         ) : (
           <>

@@ -29,13 +29,15 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
   /* ---- LIST ---- */
   if (nav.view === 'list') {
     return (
-      <WorkoutList
-        schede={schede}
-        loading={loading}
-        onSelect={id => push({ view: 'scheda', schedaId: id })}
-        onCreate={nome => createScheda(nome)}
-        onDelete={id => deleteScheda(id)}
-      />
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        <WorkoutList
+          schede={schede}
+          loading={loading}
+          onSelect={id => push({ view: 'scheda', schedaId: id })}
+          onCreate={nome => createScheda(nome)}
+          onDelete={id => deleteScheda(id)}
+        />
+      </div>
     )
   }
 
@@ -44,17 +46,19 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
     const scheda = schede.find(s => s.id === nav.schedaId)
     if (!scheda) { push({ view: 'list' }); return null }
     return (
-      <SchedaDetail
-        scheda={scheda}
-        schede={schede}
-        onEsercizioClick={(settimanaNum, sedutaNum, esId) =>
-          push({ view: 'esercizio', schedaId: nav.schedaId, settimanaNum, sedutaNum, esId })
-        }
-        onAddEsercizio={(settimanaNum, sedutaNum) => addEsercizio(nav.schedaId, settimanaNum, sedutaNum)}
-        onAddGiorno={(settimanaNum) => addGiorno(nav.schedaId, settimanaNum)}
-        onDuplicaSettimana={(num) => duplicateSettimana(nav.schedaId, num)}
-        onDeleteSettimana={(num) => deleteSettimana(nav.schedaId, num)}
-      />
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        <SchedaDetail
+          scheda={scheda}
+          schede={schede}
+          onEsercizioClick={(settimanaNum, sedutaNum, esId) =>
+            push({ view: 'esercizio', schedaId: nav.schedaId, settimanaNum, sedutaNum, esId })
+          }
+          onAddEsercizio={(settimanaNum, sedutaNum) => addEsercizio(nav.schedaId, settimanaNum, sedutaNum)}
+          onAddGiorno={(settimanaNum) => addGiorno(nav.schedaId, settimanaNum)}
+          onDuplicaSettimana={(num) => duplicateSettimana(nav.schedaId, num)}
+          onDeleteSettimana={(num) => deleteSettimana(nav.schedaId, num)}
+        />
+      </div>
     )
   }
 
@@ -67,7 +71,6 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
 
     if (!esercizio) { push({ view: 'scheda', schedaId }); return null }
 
-    // Cerca l'esercizio con lo stesso nome in una sessione precedente (settimana/seduta precedente)
     const prevEsercizio = (() => {
       const records = []
       for (const s of (scheda?.settimane ?? [])) {
@@ -81,12 +84,14 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
     })()
 
     return (
-      <EsercizioDetail
-        esercizio={esercizio}
-        prevEsercizio={prevEsercizio}
-        onUpdate={(updates) => updateEsercizio(schedaId, settimanaNum, sedutaNum, esId, updates)}
-        onDelete={() => { deleteEsercizio(schedaId, settimanaNum, sedutaNum, esId); push({ view: 'scheda', schedaId }) }}
-      />
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        <EsercizioDetail
+          esercizio={esercizio}
+          prevEsercizio={prevEsercizio}
+          onUpdate={(updates) => updateEsercizio(schedaId, settimanaNum, sedutaNum, esId, updates)}
+          onDelete={() => { deleteEsercizio(schedaId, settimanaNum, sedutaNum, esId); push({ view: 'scheda', schedaId }) }}
+        />
+      </div>
     )
   }
 
