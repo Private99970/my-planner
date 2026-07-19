@@ -3,7 +3,7 @@ import { ChevronLeft } from 'lucide-react'
 export default function Header({ title, back, onBack, action }) {
   return (
     <header
-      className="bg-slate-800 text-white px-4 pb-4 flex items-center gap-3 sticky top-0 z-10"
+      className="bg-[#161b22] text-[#e6edf3] px-4 pb-4 flex items-center gap-3 sticky top-0 z-10 border-b border-[#21262d]"
       style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1rem)' }}
     >
       {/* back can be a JSX element (from App.jsx) or onBack callback (legacy) */}

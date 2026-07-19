@@ -74,7 +74,7 @@ export default function NutritionSection({ userId }) {
   if (dietsLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <p className="text-slate-400 text-sm">Caricamento diete…</p>
+        <p className="text-[#7d8590] text-sm">Caricamento diete…</p>
       </div>
     )
   }
@@ -83,7 +83,7 @@ export default function NutritionSection({ userId }) {
     <div className="flex-1 flex flex-col">
 
       {/* Selettore dieta + azioni */}
-      <div className="bg-white border-b border-slate-100 px-4 pt-3 pb-2">
+      <div className="bg-[#161b22] border-b border-[#21262d] px-4 pt-3 pb-2">
         <DietPills
           dietNames={dietNames}
           diets={diets}
@@ -95,17 +95,17 @@ export default function NutritionSection({ userId }) {
         <div className="flex gap-2 mt-2">
           <button
             onClick={() => setCatalogOpen(true)}
-            className="text-[11px] font-semibold text-slate-500 border border-slate-200 rounded-lg px-2.5 py-1 hover:bg-slate-50 transition-colors"
+            className="text-[11px] font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-2.5 py-1 hover:bg-[#21262d] transition-colors"
           >
             📋 Catalogo
           </button>
           <button
             onClick={exportDiets}
-            className="text-[11px] font-semibold text-slate-500 border border-slate-200 rounded-lg px-2.5 py-1 hover:bg-slate-50 transition-colors"
+            className="text-[11px] font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-2.5 py-1 hover:bg-[#21262d] transition-colors"
           >
             📥 Esporta
           </button>
-          <label className="text-[11px] font-semibold text-slate-500 border border-slate-200 rounded-lg px-2.5 py-1 hover:bg-slate-50 transition-colors cursor-pointer">
+          <label className="text-[11px] font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-2.5 py-1 hover:bg-[#21262d] transition-colors cursor-pointer">
             📤 Importa
             <input
               type="file" accept=".json" className="hidden"
@@ -129,8 +129,8 @@ export default function NutritionSection({ userId }) {
       {!curDiet ? (
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
           <div className="text-5xl mb-4">🥗</div>
-          <h2 className="text-lg font-bold text-slate-700 mb-1">Nessuna dieta ancora</h2>
-          <p className="text-sm text-slate-500 mb-6">Crea la tua prima dieta oppure importane una.</p>
+          <h2 className="text-lg font-bold text-[#e6edf3] mb-1">Nessuna dieta ancora</h2>
+          <p className="text-sm text-[#7d8590] mb-6">Crea la tua prima dieta oppure importane una.</p>
           <button onClick={() => openEditor(null)} className="btn-ind">＋ Crea la tua prima dieta</button>
         </div>
       ) : (

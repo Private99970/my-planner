@@ -1,4 +1,3 @@
-// DietPills — adattato al tema chiaro (light theme), sfondo slate-50
 export default function DietPills({ dietNames, diets, curDietIdx, onSelectDiet, onEditDiet, onNewDiet }) {
   return (
     <div className="flex gap-1.5 no-scrollbar overflow-x-auto pb-1 items-center">
@@ -15,11 +14,11 @@ export default function DietPills({ dietNames, diets, curDietIdx, onSelectDiet, 
                 border rounded-l-full border-r-0
                 ${isOn
                   ? isCustom
-                    ? 'bg-indigo-600 border-indigo-600 text-white'
-                    : 'bg-slate-700 border-slate-700 text-white'
+                    ? 'bg-[#58a6ff] border-[#58a6ff] text-[#0d1117]'
+                    : 'bg-[#30363d] border-[#30363d] text-[#e6edf3]'
                   : isCustom
-                    ? 'border-indigo-300 text-indigo-600 hover:bg-indigo-50'
-                    : 'border-slate-300 text-slate-500 hover:bg-slate-100'
+                    ? 'border-[#58a6ff]/40 text-[#58a6ff] hover:bg-[#58a6ff]/10'
+                    : 'border-[#30363d] text-[#7d8590] hover:bg-[#21262d]'
                 }
               `}
               style={{ borderRadius: '999px 0 0 999px' }}
@@ -32,14 +31,14 @@ export default function DietPills({ dietNames, diets, curDietIdx, onSelectDiet, 
                 px-2 py-1.5 text-[10px] border rounded-r-full transition-all
                 ${isOn
                   ? isCustom
-                    ? 'bg-indigo-500 border-indigo-600 text-white'
-                    : 'bg-slate-600 border-slate-700 text-white'
+                    ? 'bg-[#388bfd] border-[#58a6ff] text-[#0d1117]'
+                    : 'bg-[#21262d] border-[#30363d] text-[#e6edf3]'
                   : isCustom
-                    ? 'border-indigo-300 text-indigo-400 hover:bg-indigo-50'
-                    : 'border-slate-300 text-slate-400 hover:bg-slate-100'
+                    ? 'border-[#58a6ff]/40 text-[#58a6ff]/70 hover:bg-[#58a6ff]/10'
+                    : 'border-[#30363d] text-[#7d8590] hover:bg-[#21262d]'
                 }
               `}
-              style={{ borderRadius: '0 999px 999px 0', borderLeft: '1px solid rgba(0,0,0,0.08)' }}
+              style={{ borderRadius: '0 999px 999px 0', borderLeft: '1px solid rgba(255,255,255,0.05)' }}
               title="Modifica"
             >
               ✎
@@ -49,7 +48,7 @@ export default function DietPills({ dietNames, diets, curDietIdx, onSelectDiet, 
       })}
       <button
         onClick={onNewDiet}
-        className="flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold text-slate-400 border border-dashed border-slate-300 hover:border-indigo-400 hover:text-indigo-500 transition-all whitespace-nowrap"
+        className="flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold text-[#7d8590] border border-dashed border-[#30363d] hover:border-[#58a6ff] hover:text-[#58a6ff] transition-all whitespace-nowrap"
       >
         ＋ Nuova
       </button>

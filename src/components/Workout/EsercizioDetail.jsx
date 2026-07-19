@@ -36,64 +36,64 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
 
       {/* Header esercizio */}
       {editing ? (
-        <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col gap-3">
-          <input className="border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="Nome esercizio" value={nome} onChange={e => setNome(e.target.value)} />
+        <div className="bg-[#161b22] rounded-xl border border-[#21262d] p-4 flex flex-col gap-3">
+          <input className="border border-[#30363d] rounded-lg px-3 py-2 text-sm bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" placeholder="Nome esercizio" value={nome} onChange={e => setNome(e.target.value)} />
           <div className="grid grid-cols-3 gap-2">
             {[['Serie', serieTarget, setSerieTarget], ['Reps target', repTarget, setRepTarget], ['Recupero (s)', recuperoSec, setRecuperoSec]].map(([label, val, setter]) => (
               <div key={label}>
-                <p className="text-[10px] text-slate-400 font-semibold mb-1">{label}</p>
-                <input type="number" className="border border-slate-200 rounded-lg px-2 py-2 text-sm w-full" value={val} onChange={e => setter(e.target.value)} />
+                <p className="text-[10px] text-[#7d8590] font-semibold mb-1">{label}</p>
+                <input type="number" className="border border-[#30363d] rounded-lg px-2 py-2 text-sm w-full bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" value={val} onChange={e => setter(e.target.value)} />
               </div>
             ))}
           </div>
-          <textarea className="border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none" rows={2} placeholder="Note tecniche..." value={noteEs} onChange={e => setNoteEs(e.target.value)} />
+          <textarea className="border border-[#30363d] rounded-lg px-3 py-2 text-sm resize-none bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" rows={2} placeholder="Note tecniche..." value={noteEs} onChange={e => setNoteEs(e.target.value)} />
           <div className="flex gap-2">
-            <button onClick={handleSaveConfig} className="flex-1 bg-indigo-600 text-white rounded-lg py-2 text-sm font-semibold">Salva</button>
-            <button onClick={() => { if (window.confirm('Eliminare questo esercizio?')) onDelete() }} className="flex-1 bg-red-50 text-red-500 border border-red-200 rounded-lg py-2 text-sm font-semibold">Elimina</button>
-            <button onClick={() => setEditing(false)} className="flex-1 bg-slate-100 text-slate-500 rounded-lg py-2 text-sm font-semibold">Annulla</button>
+            <button onClick={handleSaveConfig} className="flex-1 bg-[#58a6ff] text-[#0d1117] rounded-lg py-2 text-sm font-semibold">Salva</button>
+            <button onClick={() => { if (window.confirm('Eliminare questo esercizio?')) onDelete() }} className="flex-1 bg-[#f85149]/10 text-[#f85149] border border-[#f85149]/30 rounded-lg py-2 text-sm font-semibold">Elimina</button>
+            <button onClick={() => setEditing(false)} className="flex-1 bg-[#21262d] text-[#7d8590] rounded-lg py-2 text-sm font-semibold">Annulla</button>
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-100 p-4 flex justify-between items-start">
+        <div className="bg-[#161b22] rounded-xl border border-[#21262d] p-4 flex justify-between items-start">
           <div>
-            <p className="font-bold text-slate-800">{esercizio.nome || 'Esercizio'}</p>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="font-bold text-[#e6edf3]">{esercizio.nome || 'Esercizio'}</p>
+            <p className="text-xs text-[#7d8590] mt-0.5">
               {esercizio.serieTarget} serie × {esercizio.repTarget} reps · Recupero {esercizio.recuperoSec}s
             </p>
-            {esercizio.note && <p className="text-xs text-indigo-500 mt-1 italic">{esercizio.note}</p>}
+            {esercizio.note && <p className="text-xs text-[#58a6ff] mt-1 italic">{esercizio.note}</p>}
           </div>
-          <button onClick={() => setEditing(true)} className="text-xs text-slate-400 border border-slate-200 rounded-lg px-2 py-1">Modifica</button>
+          <button onClick={() => setEditing(true)} className="text-xs text-[#7d8590] border border-[#30363d] rounded-lg px-2 py-1">Modifica</button>
         </div>
       )}
 
       {/* Riferimento ultima esecuzione */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
-          <p className="text-[10px] text-slate-400 font-semibold uppercase mb-1">Peso precedente</p>
-          <p className="text-lg font-black text-slate-400">{lastSerie?.peso ? `${lastSerie.peso} kg` : '—'}</p>
+        <div className="bg-[#0d1117] rounded-xl p-3 border border-[#21262d]">
+          <p className="text-[10px] text-[#7d8590] font-semibold uppercase mb-1">Peso precedente</p>
+          <p className="text-lg font-black text-[#7d8590]">{lastSerie?.peso ? `${lastSerie.peso} kg` : '—'}</p>
         </div>
-        <div className="bg-indigo-50 rounded-xl p-3 border border-indigo-100">
-          <p className="text-[10px] text-indigo-400 font-semibold uppercase mb-1">Nuovo peso (kg)</p>
+        <div className="bg-[#58a6ff]/10 rounded-xl p-3 border border-[#58a6ff]/30">
+          <p className="text-[10px] text-[#58a6ff] font-semibold uppercase mb-1">Nuovo peso (kg)</p>
           <input
             type="number"
             value={peso}
             onChange={e => setPeso(e.target.value)}
             placeholder={lastSerie?.peso || '0'}
-            className="w-full bg-transparent text-lg font-black text-indigo-700 placeholder-indigo-300 outline-none"
+            className="w-full bg-transparent text-lg font-black text-[#e6edf3] placeholder-[#30363d] outline-none"
           />
         </div>
-        <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
-          <p className="text-[10px] text-slate-400 font-semibold uppercase mb-1">Rep precedenti</p>
-          <p className="text-lg font-black text-slate-400">{lastSerie?.reps || '—'}</p>
+        <div className="bg-[#0d1117] rounded-xl p-3 border border-[#21262d]">
+          <p className="text-[10px] text-[#7d8590] font-semibold uppercase mb-1">Rep precedenti</p>
+          <p className="text-lg font-black text-[#7d8590]">{lastSerie?.reps || '—'}</p>
         </div>
-        <div className="bg-indigo-50 rounded-xl p-3 border border-indigo-100">
-          <p className="text-[10px] text-indigo-400 font-semibold uppercase mb-1">Nuove rep</p>
+        <div className="bg-[#58a6ff]/10 rounded-xl p-3 border border-[#58a6ff]/30">
+          <p className="text-[10px] text-[#58a6ff] font-semibold uppercase mb-1">Nuove rep</p>
           <input
             type="number"
             value={reps}
             onChange={e => setReps(e.target.value)}
             placeholder={lastSerie?.reps || '0'}
-            className="w-full bg-transparent text-lg font-black text-indigo-700 placeholder-indigo-300 outline-none"
+            className="w-full bg-transparent text-lg font-black text-[#e6edf3] placeholder-[#30363d] outline-none"
           />
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
         value={nota}
         onChange={e => setNota(e.target.value)}
         placeholder="Com'è andata questa serie? (facile, cedimento, dolore…)"
-        className="w-full bg-white rounded-xl p-3 text-sm border border-slate-100 outline-none resize-none h-20"
+        className="w-full bg-[#161b22] rounded-xl p-3 text-sm text-[#e6edf3] border border-[#21262d] outline-none resize-none h-20 placeholder-[#484f58]"
       />
 
       {/* Timer */}
@@ -121,13 +121,13 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
       {/* Serie già registrate */}
       {serieEseguite.length > 0 && (
         <div>
-          <p className="text-xs text-slate-400 font-semibold mb-2">Serie registrate questa sessione</p>
+          <p className="text-xs text-[#7d8590] font-semibold mb-2">Serie registrate questa sessione</p>
           <div className="flex flex-col gap-1.5">
             {serieEseguite.map((s, i) => (
-              <div key={i} className="bg-white rounded-lg border border-slate-100 px-3 py-2 flex items-center justify-between">
-                <span className="text-xs text-slate-400">Serie {i + 1}</span>
-                <span className="text-sm font-bold text-slate-700">{s.peso}kg × {s.reps} reps</span>
-                {s.nota && <span className="text-xs text-slate-400 italic truncate ml-2 max-w-[100px]">{s.nota}</span>}
+              <div key={i} className="bg-[#161b22] rounded-lg border border-[#21262d] px-3 py-2 flex items-center justify-between">
+                <span className="text-xs text-[#7d8590]">Serie {i + 1}</span>
+                <span className="text-sm font-bold text-[#e6edf3]">{s.peso}kg × {s.reps} reps</span>
+                {s.nota && <span className="text-xs text-[#7d8590] italic truncate ml-2 max-w-[100px]">{s.nota}</span>}
               </div>
             ))}
           </div>

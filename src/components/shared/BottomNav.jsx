@@ -8,14 +8,14 @@ const TABS = [
 
 export default function BottomNav({ active, onChange }) {
   return (
-    <nav className="shrink-0 bg-white border-t border-slate-200 flex z-20 sticky bottom-0"
+    <nav className="shrink-0 bg-[#161b22] border-t border-[#21262d] flex z-20 sticky bottom-0"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
       {TABS.map(({ id, label, Icon }) => (
         <button
           key={id}
           onClick={() => onChange(id)}
           className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
-            active === id ? 'text-indigo-600' : 'text-slate-400'
+            active === id ? 'text-[#58a6ff]' : 'text-[#7d8590]'
           }`}
         >
           <Icon size={20} strokeWidth={active === id ? 2.5 : 2} />

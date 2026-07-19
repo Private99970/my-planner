@@ -8,8 +8,8 @@ import { MEASUREMENT_FIELDS } from '../../hooks/useBodyMeasurements'
 const CIRCONF_FIELDS = MEASUREMENT_FIELDS.filter(f => f.group === 'circonf')
 
 const COLORS = [
-  '#6366f1', '#f59e0b', '#10b981', '#ef4444',
-  '#8b5cf6', '#06b6d4', '#f97316', '#ec4899',
+  '#58a6ff', '#d29922', '#3fb950', '#f85149',
+  '#bc8cff', '#39d5ff', '#f97316', '#ec4899',
 ]
 
 function fmtDate(dateStr) {
@@ -20,13 +20,13 @@ function fmtDate(dateStr) {
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-white border border-slate-100 rounded-xl shadow-lg px-3 py-2 text-[12px]">
-      <div className="font-bold text-slate-600 mb-1">{label}</div>
+    <div className="bg-[#161b22] border border-[#30363d] rounded-xl shadow-lg px-3 py-2 text-[12px]">
+      <div className="font-bold text-[#e6edf3] mb-1">{label}</div>
       {payload.map((p, i) => (
         <div key={i} className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: p.color }} />
-          <span className="text-slate-500">{p.name}:</span>
-          <span className="font-semibold text-slate-700">{p.value} {p.unit ?? ''}</span>
+          <span className="text-[#7d8590]">{p.name}:</span>
+          <span className="font-semibold text-[#e6edf3]">{p.value} {p.unit ?? ''}</span>
         </div>
       ))}
     </div>
@@ -63,15 +63,15 @@ export default function StatsChart({ records }) {
   }
 
   return (
-    <div className="mx-4 mt-4 bg-white rounded-2xl border border-slate-100 overflow-hidden">
+    <div className="mx-4 mt-4 bg-[#161b22] rounded-2xl border border-[#21262d] overflow-hidden">
       {/* Tab bar */}
-      <div className="flex border-b border-slate-100">
+      <div className="flex border-b border-[#21262d]">
         <button
           onClick={() => setTab('peso')}
           className={`flex-1 py-2.5 text-[12px] font-semibold transition-colors ${
             tab === 'peso'
-              ? 'text-indigo-600 border-b-2 border-indigo-500'
-              : 'text-slate-400 hover:text-slate-600'
+              ? 'text-[#58a6ff] border-b-2 border-[#58a6ff]'
+              : 'text-[#7d8590] hover:text-[#e6edf3]'
           }`}
         >
           ⚖️ Peso
@@ -80,8 +80,8 @@ export default function StatsChart({ records }) {
           onClick={() => setTab('misure')}
           className={`flex-1 py-2.5 text-[12px] font-semibold transition-colors ${
             tab === 'misure'
-              ? 'text-indigo-600 border-b-2 border-indigo-500'
-              : 'text-slate-400 hover:text-slate-600'
+              ? 'text-[#58a6ff] border-b-2 border-[#58a6ff]'
+              : 'text-[#7d8590] hover:text-[#e6edf3]'
           }`}
         >
           📏 Misure
@@ -92,15 +92,15 @@ export default function StatsChart({ records }) {
         <div className="pt-4 pb-2 pr-4">
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={chartData} margin={{ top: 4, right: 0, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
               <XAxis
                 dataKey="_label"
-                tick={{ fontSize: 10, fill: '#94a3b8' }}
+                tick={{ fontSize: 10, fill: '#7d8590' }}
                 tickLine={false}
                 axisLine={false}
               />
               <YAxis
-                tick={{ fontSize: 10, fill: '#94a3b8' }}
+                tick={{ fontSize: 10, fill: '#7d8590' }}
                 tickLine={false}
                 axisLine={false}
                 domain={['auto', 'auto']}
@@ -111,10 +111,10 @@ export default function StatsChart({ records }) {
                 dataKey="peso"
                 name="Peso"
                 unit="kg"
-                stroke="#6366f1"
+                stroke="#58a6ff"
                 strokeWidth={2.5}
-                dot={<Dot r={3} fill="#6366f1" strokeWidth={0} />}
-                activeDot={{ r: 5, fill: '#6366f1' }}
+                dot={<Dot r={3} fill="#58a6ff" strokeWidth={0} />}
+                activeDot={{ r: 5, fill: '#58a6ff' }}
                 connectNulls
               />
             </LineChart>
@@ -134,8 +134,8 @@ export default function StatsChart({ records }) {
                   onClick={() => toggleField(f.key)}
                   className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all ${
                     active
-                      ? 'text-white border-transparent'
-                      : 'text-slate-400 border-slate-200 bg-white'
+                      ? 'text-[#0d1117] border-transparent'
+                      : 'text-[#7d8590] border-[#30363d] bg-[#0d1117]'
                   }`}
                   style={active ? { background: COLORS[i % COLORS.length] } : {}}
                 >
@@ -148,15 +148,15 @@ export default function StatsChart({ records }) {
           <div className="pt-3 pb-2 pr-4">
             <ResponsiveContainer width="100%" height={190}>
               <LineChart data={chartData} margin={{ top: 4, right: 0, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
                 <XAxis
                   dataKey="_label"
-                  tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  tick={{ fontSize: 10, fill: '#7d8590' }}
                   tickLine={false}
                   axisLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  tick={{ fontSize: 10, fill: '#7d8590' }}
                   tickLine={false}
                   axisLine={false}
                   domain={['auto', 'auto']}

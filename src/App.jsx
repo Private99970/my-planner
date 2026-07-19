@@ -13,8 +13,8 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <p className="text-slate-400 text-sm">Caricamento…</p>
+      <div className="min-h-screen bg-[#0d1117] flex items-center justify-center">
+        <p className="text-[#7d8590] text-sm">Caricamento…</p>
       </div>
     )
   }
@@ -38,7 +38,7 @@ function AppContent({ userId }) {
         if (workoutNav.view === 'esercizio') setWorkoutNav({ view: 'scheda', schedaId: workoutNav.schedaId })
         else setWorkoutNav({ view: 'list' })
       }}
-      className="text-sm text-white/70 flex items-center gap-1 pl-1"
+      className="text-sm text-[#7d8590] flex items-center gap-1 pl-1"
     >
       ‹ Indietro
     </button>
@@ -47,7 +47,7 @@ function AppContent({ userId }) {
   const logoutBtn = (
     <button
       onClick={() => supabase.auth.signOut()}
-      className="text-xs text-white/50 border border-white/20 rounded-lg px-2 py-1 active:bg-white/10"
+      className="text-xs text-[#7d8590] border border-[#30363d] rounded-lg px-2 py-1 active:bg-[#21262d]"
     >
       Esci
     </button>
@@ -59,7 +59,7 @@ function AppContent({ userId }) {
   }
 
   return (
-    <div className="min-h-dvh bg-slate-50 flex flex-col w-full">
+    <div className="min-h-dvh bg-[#0d1117] flex flex-col w-full">
       <Header title={TITLES[tab]} back={backBtn} action={!backBtn ? logoutBtn : null} />
 
       <div className="flex-1 overflow-y-auto flex flex-col">
