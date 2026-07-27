@@ -38,7 +38,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const handleSendLink = async (e) => {
+  const handleSendCode = async (e) => {
     e.preventDefault()
     setError(null)
     const allowedEmail = import.meta.env.VITE_ALLOWED_EMAIL?.toLowerCase()
@@ -47,10 +47,7 @@ export default function Login() {
       return
     }
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: window.location.href },
-    })
+    const { error } = await supabase.auth.signInWithOtp({ email })
     setLoading(false)
     if (error) setError(error.message)
     else setStep('verify')
@@ -59,48 +56,42 @@ export default function Login() {
   const handleVerify = async (e) => {
     e.preventDefault()
     setError(null)
-    const parsed = parseInput(input)
-    if (!parsed) {
-      setError('Non riconosciuto. Copia l\'intero link dall\'email e incollalo qui.')
-      return
-    }
+    const val = input.trim()
 
     setLoading(true)
     let error
-    if (parsed.kind === 'session') {
-      ({ error } = await supabase.auth.setSession({
-        access_token: parsed.access_token,
-        refresh_token: parsed.refresh_token,
-      }))
-    } else if (parsed.kind === 'code') {
+    // Codice numerico (6-10 cifre a seconda della config Supabase)
+    if (/^\d{6,10}$/.test(val)) {
       ({ error } = await supabase.auth.verifyOtp({
-        email, token: parsed.token, type: 'email',
+        email, token: val, type: 'email',
       }))
     } else {
-      // Prova prima come magiclink, poi come email (varia in base al tipo di utente)
-      ({ error } = await supabase.auth.verifyOtp({
-        token_hash: parsed.token, type: 'magiclink',
-      }))
-      if (error) {
-        const retry = await supabase.auth.verifyOtp({
-          token_hash: parsed.token, type: 'email',
-        })
-        error = retry.error
+      // Fallback: l'utente ha incollato un link intero
+      const parsed = parseInput(val)
+      if (!parsed) {
+        setLoading(false)
+        setError('Inserisci il codice a 6 cifre ricevuto via email.')
+        return
+      }
+      if (parsed.kind === 'session') {
+        ({ error } = await supabase.auth.setSession({
+          access_token: parsed.access_token,
+          refresh_token: parsed.refresh_token,
+        }))
+      } else {
+        ({ error } = await supabase.auth.verifyOtp({
+          token_hash: parsed.token, type: 'magiclink',
+        }))
+        if (error) {
+          const retry = await supabase.auth.verifyOtp({ token_hash: parsed.token, type: 'email' })
+          error = retry.error
+        }
       }
     }
     setLoading(false)
     if (error) {
       console.error('verify error:', error)
-      setError(error.message || 'Errore sconosciuto.')
-    }
-  }
-
-  const handlePaste = async () => {
-    try {
-      const text = await navigator.clipboard.readText()
-      if (text) { setInput(text); setError(null) }
-    } catch {
-      setError('Incolla manualmente nel campo qui sopra.')
+      setError('Codice non valido o scaduto. Richiedine uno nuovo.')
     }
   }
 
@@ -111,12 +102,12 @@ export default function Login() {
           <div className="text-4xl mb-3">💪</div>
           <h1 className="text-xl font-bold text-[#e6edf3]">My Planner</h1>
           <p className="text-sm text-[#7d8590] mt-1">
-            {step === 'email' ? 'Inserisci la tua email per accedere.' : `Email inviata a ${email}`}
+            {step === 'email' ? 'Inserisci la tua email per accedere.' : `Codice inviato a ${email}`}
           </p>
         </div>
 
         {step === 'email' ? (
-          <form onSubmit={handleSendLink} className="flex flex-col gap-3">
+          <form onSubmit={handleSendCode} className="flex flex-col gap-3">
             <input
               type="email"
               value={email}
@@ -132,40 +123,34 @@ export default function Login() {
               disabled={loading}
               className="btn-ind disabled:opacity-50 py-3 font-semibold"
             >
-              {loading ? 'Invio in corso…' : 'Invia link di accesso'}
+              {loading ? 'Invio in corso…' : 'Invia codice'}
             </button>
           </form>
         ) : (
           <form onSubmit={handleVerify} className="flex flex-col gap-3">
             <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-3 mb-1">
               <p className="text-[12px] text-[#7d8590] leading-relaxed">
-                Apri l'email, <strong className="text-[#e6edf3]">tieni premuto sul link</strong> e scegli
-                <strong className="text-[#e6edf3]"> Copia</strong>. Poi torna qui e incollalo sotto.
+                Controlla la tua email e inserisci il <strong className="text-[#e6edf3]">codice</strong> qui sotto.
               </p>
             </div>
 
-            <textarea
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={10}
               value={input}
-              onChange={(e) => { setInput(e.target.value); setError(null) }}
-              placeholder="Incolla qui il link…"
-              rows={3}
-              className="inp w-full py-3 px-4 text-xs resize-none break-all"
+              onChange={(e) => { setInput(e.target.value.replace(/\D/g, '')); setError(null) }}
+              placeholder="Codice"
+              className="inp w-full py-3 px-4 text-center text-2xl tracking-[0.3em] font-bold"
               autoFocus
             />
-
-            <button
-              type="button"
-              onClick={handlePaste}
-              className="btn-ghost py-2.5"
-            >
-              📋 Incolla dagli appunti
-            </button>
 
             {error && <p className="text-[#f85149] text-sm text-center">{error}</p>}
 
             <button
               type="submit"
-              disabled={loading || !input.trim()}
+              disabled={loading || input.trim().length < 6}
               className="btn-ind disabled:opacity-50 py-3 font-semibold"
             >
               {loading ? 'Verifica in corso…' : 'Entra'}
