@@ -7,6 +7,7 @@ import MacroBanner from './MacroBanner'
 import MealCard from './MealCard'
 import EditorPanel from './Editor/EditorPanel'
 import CatalogPanel from './Catalog/CatalogPanel'
+import { printDiet } from './printDiet'
 import { MEAL_DEFS, GG } from '../../data/diets'
 
 export default function NutritionSection({ userId }) {
@@ -98,6 +99,13 @@ export default function NutritionSection({ userId }) {
             className="text-[11px] font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-2.5 py-1 hover:bg-[#21262d] transition-colors"
           >
             📋 Catalogo
+          </button>
+          <button
+            onClick={() => curDiet && printDiet(curDietName, curDiet, catalogState.catalog)}
+            disabled={!curDiet}
+            className="text-[11px] font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-2.5 py-1 hover:bg-[#21262d] transition-colors disabled:opacity-40"
+          >
+            🖨️ Stampa
           </button>
           <button
             onClick={exportDiets}
