@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Check } from 'lucide-react'
+import { Check, Plus, Trash2 } from 'lucide-react'
 import Timer from './Timer'
+import { getBlocchi } from '../../hooks/useWorkout'
 
 export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, onDelete }) {
   const [peso, setPeso] = useState('')
@@ -8,10 +9,13 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
   const [nota, setNota] = useState('')
   const [editing, setEditing] = useState(false)
   const [nome, setNome] = useState(esercizio.nome)
-  const [serieTarget, setSerieTarget] = useState(esercizio.serieTarget)
-  const [repTarget, setRepTarget] = useState(esercizio.repTarget)
+  const [blocchi, setBlocchi] = useState(() =>
+    getBlocchi(esercizio).map(b => ({ serie: String(b.serie), reps: String(b.reps), nota: b.nota || '' }))
+  )
   const [recuperoSec, setRecuperoSec] = useState(esercizio.recuperoSec)
   const [noteEs, setNoteEs] = useState(esercizio.note || '')
+
+  const blocchiView = getBlocchi(esercizio)
 
   // Ultima esecuzione registrata come riferimento (prima serie della sessione precedente con dati)
   const lastSerie = prevEsercizio?.serieEseguite?.find(s => s.peso || s.reps)
@@ -26,8 +30,15 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
     setNota('')
   }
 
+  const setBlocco = (i, key, val) =>
+    setBlocchi(prev => prev.map((b, idx) => idx === i ? { ...b, [key]: val } : b))
+  const addBlocco = () => setBlocchi(prev => [...prev, { serie: '3', reps: '8', nota: '' }])
+  const removeBlocco = (i) => setBlocchi(prev => prev.length > 1 ? prev.filter((_, idx) => idx !== i) : prev)
+
   const handleSaveConfig = () => {
-    onUpdate({ nome, serieTarget: parseInt(serieTarget) || 3, repTarget: parseInt(repTarget) || 8, recuperoSec: parseInt(recuperoSec) || 90, note: noteEs })
+    const cleaned = blocchi
+      .map(b => ({ serie: parseInt(b.serie) || 1, reps: parseInt(b.reps) || 1, nota: b.nota.trim() }))
+    onUpdate({ nome, blocchi: cleaned, recuperoSec: parseInt(recuperoSec) || 90, note: noteEs })
     setEditing(false)
   }
 
@@ -38,14 +49,43 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
       {editing ? (
         <div className="bg-[#161b22] rounded-xl border border-[#21262d] p-4 flex flex-col gap-3">
           <input className="border border-[#30363d] rounded-lg px-3 py-2 text-sm bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" placeholder="Nome esercizio" value={nome} onChange={e => setNome(e.target.value)} />
-          <div className="grid grid-cols-3 gap-2">
-            {[['Serie', serieTarget, setSerieTarget], ['Reps target', repTarget, setRepTarget], ['Recupero (s)', recuperoSec, setRecuperoSec]].map(([label, val, setter]) => (
-              <div key={label}>
-                <p className="text-[10px] text-[#7d8590] font-semibold mb-1">{label}</p>
-                <input type="number" className="border border-[#30363d] rounded-lg px-2 py-2 text-sm w-full bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" value={val} onChange={e => setter(e.target.value)} />
-              </div>
-            ))}
+
+          {/* Blocchi di serie */}
+          <div>
+            <p className="text-[10px] text-[#7d8590] font-semibold mb-2 uppercase tracking-wide">Schema serie</p>
+            <div className="flex flex-col gap-2">
+              {blocchi.map((b, i) => (
+                <div key={i} className="bg-[#0d1117] border border-[#21262d] rounded-lg p-2.5 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-[#1f3a5f] text-[#58a6ff] text-xs font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                    <div className="flex-1 grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-[9px] text-[#7d8590] mb-0.5">Serie</p>
+                        <input type="number" min="1" className="border border-[#30363d] rounded-md px-2 py-1.5 text-sm w-full bg-[#161b22] text-[#e6edf3] outline-none focus:border-[#58a6ff]" value={b.serie} onChange={e => setBlocco(i, 'serie', e.target.value)} />
+                      </div>
+                      <div>
+                        <p className="text-[9px] text-[#7d8590] mb-0.5">Reps</p>
+                        <input type="number" min="1" className="border border-[#30363d] rounded-md px-2 py-1.5 text-sm w-full bg-[#161b22] text-[#e6edf3] outline-none focus:border-[#58a6ff]" value={b.reps} onChange={e => setBlocco(i, 'reps', e.target.value)} />
+                      </div>
+                    </div>
+                    {blocchi.length > 1 && (
+                      <button onClick={() => removeBlocco(i)} className="text-[#30363d] hover:text-[#f85149] p-1 flex-shrink-0"><Trash2 size={14} /></button>
+                    )}
+                  </div>
+                  <input className="border border-[#30363d] rounded-md px-2 py-1.5 text-xs w-full bg-[#161b22] text-[#e6edf3] outline-none focus:border-[#58a6ff] placeholder-[#484f58]" placeholder="Nota (opzionale)" value={b.nota} onChange={e => setBlocco(i, 'nota', e.target.value)} />
+                </div>
+              ))}
+            </div>
+            <button onClick={addBlocco} className="w-full mt-2 border border-dashed border-[#30363d] rounded-lg py-2 text-[#58a6ff] text-xs font-semibold flex items-center justify-center gap-1">
+              <Plus size={13} /> Aggiungi blocco serie
+            </button>
           </div>
+
+          <div>
+            <p className="text-[10px] text-[#7d8590] font-semibold mb-1">Recupero (s)</p>
+            <input type="number" className="border border-[#30363d] rounded-lg px-2 py-2 text-sm w-full bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" value={recuperoSec} onChange={e => setRecuperoSec(e.target.value)} />
+          </div>
+
           <textarea className="border border-[#30363d] rounded-lg px-3 py-2 text-sm resize-none bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" rows={2} placeholder="Note tecniche..." value={noteEs} onChange={e => setNoteEs(e.target.value)} />
           <div className="flex gap-2">
             <button onClick={handleSaveConfig} className="flex-1 bg-[#58a6ff] text-[#0d1117] rounded-lg py-2 text-sm font-semibold">Salva</button>
@@ -54,15 +94,22 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
           </div>
         </div>
       ) : (
-        <div className="bg-[#161b22] rounded-xl border border-[#21262d] p-4 flex justify-between items-start">
-          <div>
+        <div className="bg-[#161b22] rounded-xl border border-[#21262d] p-4">
+          <div className="flex justify-between items-start">
             <p className="font-bold text-[#e6edf3]">{esercizio.nome || 'Esercizio'}</p>
-            <p className="text-xs text-[#7d8590] mt-0.5">
-              {esercizio.serieTarget} serie × {esercizio.repTarget} reps · Recupero {esercizio.recuperoSec}s
-            </p>
-            {esercizio.note && <p className="text-xs text-[#58a6ff] mt-1 italic">{esercizio.note}</p>}
+            <button onClick={() => setEditing(true)} className="text-xs text-[#7d8590] border border-[#30363d] rounded-lg px-2 py-1 flex-shrink-0">Modifica</button>
           </div>
-          <button onClick={() => setEditing(true)} className="text-xs text-[#7d8590] border border-[#30363d] rounded-lg px-2 py-1">Modifica</button>
+          <div className="flex flex-col gap-1 mt-2">
+            {blocchiView.map((b, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm">
+                <span className="w-5 h-5 rounded-full bg-[#1f3a5f] text-[#58a6ff] text-[10px] font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                <span className="text-[#e6edf3] font-semibold">{b.serie}×{b.reps}</span>
+                {b.nota && <span className="text-[#7d8590] text-xs italic">· {b.nota}</span>}
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-[#7d8590] mt-2">Recupero {esercizio.recuperoSec}s</p>
+          {esercizio.note && <p className="text-xs text-[#58a6ff] mt-1 italic">{esercizio.note}</p>}
         </div>
       )}
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Plus, ChevronRight, Trash2 } from 'lucide-react'
-import { progressIndicator, best1RM } from '../../hooks/useWorkout'
+import { progressIndicator, best1RM, formatBlocchi } from '../../hooks/useWorkout'
 
 function ProgressBadge({ direction }) {
   if (!direction) return null
@@ -76,7 +76,7 @@ export default function SchedaDetail({ scheda, schede, onEsercizioClick, onAddEs
                   <div>
                     <p className="text-sm font-semibold text-[#e6edf3]">{es.nome || <span className="text-[#30363d]">Nuovo esercizio</span>}</p>
                     <p className="text-xs text-[#7d8590] mt-0.5">
-                      {es.serieTarget}×{es.repTarget} · {es.recuperoSec}s
+                      {formatBlocchi(es)} · {es.recuperoSec}s
                       {hasDati && (
                         <span className="text-[#58a6ff] ml-1">
                           · {best1RM(es.serieEseguite).toFixed(1)} kg 1RM

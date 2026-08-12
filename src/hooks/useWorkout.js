@@ -4,12 +4,31 @@ import { supabase } from '../lib/supabaseClient'
 export const emptyExercise = () => ({
   id: Date.now() + Math.random(),
   nome: '',
-  serieTarget: 3,
-  repTarget: 8,
+  blocchi: [{ serie: 3, reps: 8, nota: '' }],
   recuperoSec: 90,
   note: '',
   serieEseguite: [],
 })
+
+/**
+ * Restituisce i blocchi di serie di un esercizio.
+ * Compatibilità: gli esercizi vecchi (serieTarget/repTarget) vengono
+ * convertiti automaticamente in un singolo blocco.
+ */
+export function getBlocchi(es) {
+  if (Array.isArray(es?.blocchi) && es.blocchi.length) return es.blocchi
+  return [{ serie: es?.serieTarget ?? 3, reps: es?.repTarget ?? 8, nota: '' }]
+}
+
+/** Numero totale di serie sommando tutti i blocchi */
+export function totalSerie(es) {
+  return getBlocchi(es).reduce((t, b) => t + (parseInt(b.serie) || 0), 0)
+}
+
+/** Schema compatto dei blocchi, es. "1×10 + 2×6" */
+export function formatBlocchi(es) {
+  return getBlocchi(es).map(b => `${b.serie}×${b.reps}`).join(' + ')
+}
 
 const emptyScheda = (nome) => ({
   id: crypto.randomUUID(),
