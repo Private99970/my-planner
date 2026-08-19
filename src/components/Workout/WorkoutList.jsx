@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Plus, ChevronRight, Trash2 } from 'lucide-react'
 
-export default function WorkoutList({ schede, loading, onSelect, onCreate, onDelete }) {
+export default function WorkoutList({ schede, loading, onSelect, onCreate, onDelete, onImport }) {
   const [newName, setNewName] = useState('')
   const [creating, setCreating] = useState(false)
 
@@ -10,6 +10,22 @@ export default function WorkoutList({ schede, loading, onSelect, onCreate, onDel
     onCreate(newName.trim())
     setNewName('')
     setCreating(false)
+  }
+
+  const handleImportFile = (e) => {
+    const file = e.target.files[0]
+    if (!file || !onImport) return
+    const reader = new FileReader()
+    reader.onload = async ev => {
+      let obj
+      try { obj = JSON.parse(ev.target.result) } catch { alert('File non valido'); return }
+      const scheda = obj?.scheda || obj
+      const res = await onImport(scheda)
+      if (res?.ok) alert(`Scheda "${scheda.nome}" importata.`)
+      else alert(`Errore: ${res?.error || 'importazione fallita'}`)
+    }
+    reader.readAsText(file)
+    e.target.value = ''
   }
 
   if (loading) {
@@ -31,6 +47,12 @@ export default function WorkoutList({ schede, loading, onSelect, onCreate, onDel
         >
           + Nuova scheda
         </button>
+        {onImport && (
+          <label className="text-xs font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-4 py-2 hover:bg-[#21262d] transition-colors cursor-pointer">
+            📥 Importa scheda
+            <input type="file" accept=".json" className="hidden" onChange={handleImportFile} />
+          </label>
+        )}
       </div>
     )
   }
@@ -76,12 +98,20 @@ export default function WorkoutList({ schede, loading, onSelect, onCreate, onDel
           <button onClick={() => setCreating(false)} className="text-sm text-[#7d8590]">✕</button>
         </div>
       ) : (
-        <button
-          onClick={() => setCreating(true)}
-          className="w-full py-4 rounded-xl border border-dashed border-[#30363d] text-sm text-[#7d8590] flex items-center justify-center gap-2"
-        >
-          <Plus size={16} /> Nuova scheda
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setCreating(true)}
+            className="flex-1 py-4 rounded-xl border border-dashed border-[#30363d] text-sm text-[#7d8590] flex items-center justify-center gap-2"
+          >
+            <Plus size={16} /> Nuova scheda
+          </button>
+          {onImport && (
+            <label className="py-4 px-4 rounded-xl border border-dashed border-[#30363d] text-sm text-[#7d8590] flex items-center justify-center gap-2 cursor-pointer">
+              📥 Importa
+              <input type="file" accept=".json" className="hidden" onChange={handleImportFile} />
+            </label>
+          )}
+        </div>
       )}
     </div>
   )

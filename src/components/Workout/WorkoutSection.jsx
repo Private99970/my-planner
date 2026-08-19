@@ -13,7 +13,7 @@ import EsercizioDetail from './EsercizioDetail'
 export default function WorkoutSection({ userId, externalNav, onNavChange }) {
   const {
     schede, loading,
-    createScheda, deleteScheda,
+    createScheda, deleteScheda, importScheda,
     addGiorno, addEsercizio, updateEsercizio, deleteEsercizio, duplicateSettimana, deleteSettimana,
   } = useWorkout(userId)
 
@@ -36,6 +36,7 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
           onSelect={id => push({ view: 'scheda', schedaId: id })}
           onCreate={nome => createScheda(nome)}
           onDelete={id => deleteScheda(id)}
+          onImport={importScheda}
         />
       </div>
     )

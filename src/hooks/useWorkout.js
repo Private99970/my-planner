@@ -130,6 +130,43 @@ export function useWorkout(userId) {
     await supabase.from('schede').delete().eq('id', id).eq('user_id', userId)
   }, [userId])
 
+  /**
+   * Importa una scheda completa da un oggetto { nome, settimane }.
+   * Assegna nuovi id e sincronizza su Supabase.
+   */
+  const importScheda = useCallback(async (obj) => {
+    if (!obj || !obj.nome || !Array.isArray(obj.settimane)) {
+      return { ok: false, error: 'Formato scheda non valido' }
+    }
+    const s = {
+      id: crypto.randomUUID(),
+      nome: obj.nome,
+      createdAt: new Date().toISOString(),
+      settimane: obj.settimane.map(sett => ({
+        numero: sett.numero,
+        sedute: (sett.sedute || []).map(sd => ({
+          numero: sd.numero,
+          esercizi: (sd.esercizi || []).map(e => ({
+            id: Date.now() + Math.random(),
+            nome: e.nome || '',
+            blocchi: Array.isArray(e.blocchi) && e.blocchi.length
+              ? e.blocchi.map(b => ({ serie: b.serie ?? 3, reps: b.reps ?? 8, nota: b.nota || '' }))
+              : [{ serie: e.serieTarget ?? 3, reps: e.repTarget ?? 8, nota: '' }],
+            recuperoSec: e.recuperoSec ?? 60,
+            note: e.note || '',
+            serieEseguite: [],
+          })),
+        })),
+      })),
+    }
+    setSchede(prev => [...prev, s])
+    const { error } = await supabase.from('schede').insert({
+      id: s.id, user_id: userId, nome: s.nome, settimane: s.settimane,
+    })
+    if (error) { console.error('importScheda:', error); return { ok: false, error: error.message } }
+    return { ok: true, id: s.id }
+  }, [userId])
+
   const updateScheda = useCallback((schedaId, updaterFn) => {
     setSchede(prev => {
       const next = prev.map(s => s.id === schedaId ? updaterFn(s) : s)
@@ -245,7 +282,7 @@ export function useWorkout(userId) {
 
   return {
     schede, mobilita, stretching, loading,
-    createScheda, deleteScheda,
+    createScheda, deleteScheda, importScheda,
     addGiorno, addEsercizio, updateEsercizio, deleteEsercizio, duplicateSettimana, deleteSettimana,
     addMobilita, removeMobilita, addStretching, removeStretching,
   }
