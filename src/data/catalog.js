@@ -36,4 +36,7 @@ export const BASE_CAT = {
   "Popcorn":[455.2,7.8,43.0,28.0],"Fiocchi d'avena":[394.9,16.9,66.3,6.9],
   "Frutti di bosco":[30.4,1.0,6.6,0.0],"Cioccolato fondente":[550.2,5.1,60.0,32.2],
   "Budino crema":[90.1,2.9,14.0,2.5],"Sugo":[36.6,1.3,7.4,0.2],
+  "Merluzzo":[82.0,18.0,0.0,0.7],"Oh! Whey vaniglia":[50.0,8.0,3.0,0.5],
+  "Burro di arachidi":[588.0,25.0,20.0,50.0],"Mela":[52.0,0.3,14.0,0.2],
+  "Datteri":[282.0,2.5,75.0,0.4],
 }
