@@ -7,6 +7,7 @@ import MacroBanner from './MacroBanner'
 import MealCard from './MealCard'
 import EditorPanel from './Editor/EditorPanel'
 import CatalogPanel from './Catalog/CatalogPanel'
+import ShoppingListPanel from './ShoppingListPanel'
 import { printDiet } from './printDiet'
 import { MEAL_DEFS, GG } from '../../data/diets'
 
@@ -24,6 +25,7 @@ export default function NutritionSection({ userId }) {
   const [editorOpen, setEditorOpen] = useState(false)
   const [editorDietKey, setEditorDietKey] = useState(null)
   const [catalogOpen, setCatalogOpen] = useState(false)
+  const [shoppingOpen, setShoppingOpen] = useState(false)
 
   const touchStartX = useRef(null)
 
@@ -99,6 +101,13 @@ export default function NutritionSection({ userId }) {
             className="text-[11px] font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-2.5 py-1 hover:bg-[#21262d] transition-colors"
           >
             📋 Catalogo
+          </button>
+          <button
+            onClick={() => curDiet && setShoppingOpen(true)}
+            disabled={!curDiet}
+            className="text-[11px] font-semibold text-[#7d8590] border border-[#30363d] rounded-lg px-2.5 py-1 hover:bg-[#21262d] transition-colors disabled:opacity-40"
+          >
+            🛒 Spesa
           </button>
           <button
             onClick={() => curDiet && printDiet(curDietName, curDiet, catalogState.catalog)}
@@ -190,6 +199,14 @@ export default function NutritionSection({ userId }) {
         open={catalogOpen}
         onClose={() => setCatalogOpen(false)}
         {...catalogState}
+      />
+
+      <ShoppingListPanel
+        open={shoppingOpen}
+        onClose={() => setShoppingOpen(false)}
+        dietName={curDietName}
+        diet={curDiet}
+        catalog={catalogState.catalog}
       />
     </div>
   )
