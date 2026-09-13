@@ -51,6 +51,8 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
         <SchedaDetail
           scheda={scheda}
           schede={schede}
+          settimanaNum={nav.settimanaNum}
+          onChangeSettimana={(num) => push({ view: 'scheda', schedaId: nav.schedaId, settimanaNum: num })}
           onEsercizioClick={(settimanaNum, sedutaNum, esId) =>
             push({ view: 'esercizio', schedaId: nav.schedaId, settimanaNum, sedutaNum, esId })
           }
@@ -70,7 +72,7 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
     const seduta = scheda?.settimane.find(s => s.numero === settimanaNum)?.sedute.find(sd => sd.numero === sedutaNum)
     const esercizio = seduta?.esercizi.find(e => e.id === esId)
 
-    if (!esercizio) { push({ view: 'scheda', schedaId }); return null }
+    if (!esercizio) { push({ view: 'scheda', schedaId, settimanaNum }); return null }
 
     const prevEsercizio = (() => {
       const records = []
@@ -90,7 +92,7 @@ export default function WorkoutSection({ userId, externalNav, onNavChange }) {
           esercizio={esercizio}
           prevEsercizio={prevEsercizio}
           onUpdate={(updates) => updateEsercizio(schedaId, settimanaNum, sedutaNum, esId, updates)}
-          onDelete={() => { deleteEsercizio(schedaId, settimanaNum, sedutaNum, esId); push({ view: 'scheda', schedaId }) }}
+          onDelete={() => { deleteEsercizio(schedaId, settimanaNum, sedutaNum, esId); push({ view: 'scheda', schedaId, settimanaNum }) }}
         />
       </div>
     )

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Plus, ChevronRight, Trash2 } from 'lucide-react'
 import { progressIndicator, best1RM, formatBlocchi } from '../../hooks/useWorkout'
 
@@ -13,8 +12,13 @@ function ProgressBadge({ direction }) {
   return <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${cls}`}>{icon}</span>
 }
 
-export default function SchedaDetail({ scheda, schede, onEsercizioClick, onAddEsercizio, onAddGiorno, onDuplicaSettimana, onDeleteSettimana }) {
-  const [settimanaNum, setSettimanaNum] = useState(scheda.settimane[0]?.numero ?? 1)
+export default function SchedaDetail({ scheda, schede, settimanaNum: settimanaProp, onChangeSettimana, onEsercizioClick, onAddEsercizio, onAddGiorno, onDuplicaSettimana, onDeleteSettimana }) {
+  // La settimana selezionata è controllata dallo stato di navigazione (persiste
+  // quando entri/esci da un esercizio). Fallback alla prima settimana.
+  const settimanaNum = scheda.settimane.some(s => s.numero === settimanaProp)
+    ? settimanaProp
+    : (scheda.settimane[0]?.numero ?? 1)
+  const setSettimanaNum = (num) => onChangeSettimana?.(num)
   const settimana = scheda.settimane.find(s => s.numero === settimanaNum) ?? scheda.settimane[0]
 
   return (

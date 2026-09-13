@@ -35,7 +35,7 @@ function AppContent({ userId }) {
   const backBtn = tab === 'workout' && workoutNav.view !== 'list' ? (
     <button
       onClick={() => {
-        if (workoutNav.view === 'esercizio') setWorkoutNav({ view: 'scheda', schedaId: workoutNav.schedaId })
+        if (workoutNav.view === 'esercizio') setWorkoutNav({ view: 'scheda', schedaId: workoutNav.schedaId, settimanaNum: workoutNav.settimanaNum })
         else setWorkoutNav({ view: 'list' })
       }}
       className="text-sm text-[#7d8590] flex items-center gap-1 pl-1"

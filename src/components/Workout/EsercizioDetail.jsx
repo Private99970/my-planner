@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, Plus, Trash2 } from 'lucide-react'
+import { Check, Plus, Trash2, Pencil, X } from 'lucide-react'
 import Timer from './Timer'
 import { getBlocchi } from '../../hooks/useWorkout'
 
@@ -28,6 +28,24 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
     setPeso('')
     setReps('')
     setNota('')
+  }
+
+  // Modifica / elimina di una serie già registrata
+  const [editIdx, setEditIdx] = useState(null)
+  const [editVals, setEditVals] = useState({ peso: '', reps: '', nota: '' })
+
+  const startEditSerie = (i) => {
+    const s = serieEseguite[i]
+    setEditVals({ peso: String(s.peso ?? ''), reps: String(s.reps ?? ''), nota: s.nota || '' })
+    setEditIdx(i)
+  }
+  const saveEditSerie = () => {
+    onUpdate({ serieEseguite: serieEseguite.map((s, idx) => idx === editIdx ? { ...editVals } : s) })
+    setEditIdx(null)
+  }
+  const deleteSerie = (i) => {
+    onUpdate({ serieEseguite: serieEseguite.filter((_, idx) => idx !== i) })
+    if (editIdx === i) setEditIdx(null)
   }
 
   const setBlocco = (i, key, val) =>
@@ -171,11 +189,28 @@ export default function EsercizioDetail({ esercizio, prevEsercizio, onUpdate, on
           <p className="text-xs text-[#7d8590] font-semibold mb-2">Serie registrate questa sessione</p>
           <div className="flex flex-col gap-1.5">
             {serieEseguite.map((s, i) => (
-              <div key={i} className="bg-[#161b22] rounded-lg border border-[#21262d] px-3 py-2 flex items-center justify-between">
-                <span className="text-xs text-[#7d8590]">Serie {i + 1}</span>
-                <span className="text-sm font-bold text-[#e6edf3]">{s.peso}kg × {s.reps} reps</span>
-                {s.nota && <span className="text-xs text-[#7d8590] italic truncate ml-2 max-w-[100px]">{s.nota}</span>}
-              </div>
+              editIdx === i ? (
+                <div key={i} className="bg-[#161b22] rounded-lg border border-[#58a6ff]/40 px-3 py-2.5 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-[#7d8590] w-12 flex-shrink-0">Serie {i + 1}</span>
+                    <input type="number" placeholder="kg" className="w-full border border-[#30363d] rounded-md px-2 py-1.5 text-sm bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" value={editVals.peso} onChange={e => setEditVals(v => ({ ...v, peso: e.target.value }))} />
+                    <input type="number" placeholder="reps" className="w-full border border-[#30363d] rounded-md px-2 py-1.5 text-sm bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff]" value={editVals.reps} onChange={e => setEditVals(v => ({ ...v, reps: e.target.value }))} />
+                  </div>
+                  <input placeholder="Nota (opzionale)" className="w-full border border-[#30363d] rounded-md px-2 py-1.5 text-xs bg-[#0d1117] text-[#e6edf3] outline-none focus:border-[#58a6ff] placeholder-[#484f58]" value={editVals.nota} onChange={e => setEditVals(v => ({ ...v, nota: e.target.value }))} />
+                  <div className="flex gap-2">
+                    <button onClick={saveEditSerie} className="flex-1 bg-[#58a6ff] text-[#0d1117] rounded-md py-1.5 text-xs font-semibold flex items-center justify-center gap-1"><Check size={13} /> Salva</button>
+                    <button onClick={() => setEditIdx(null)} className="px-3 bg-[#21262d] text-[#7d8590] rounded-md py-1.5 text-xs font-semibold"><X size={13} /></button>
+                  </div>
+                </div>
+              ) : (
+                <div key={i} className="bg-[#161b22] rounded-lg border border-[#21262d] px-3 py-2 flex items-center gap-2">
+                  <span className="text-xs text-[#7d8590] flex-shrink-0">Serie {i + 1}</span>
+                  <span className="text-sm font-bold text-[#e6edf3] flex-1">{s.peso}kg × {s.reps} reps</span>
+                  {s.nota && <span className="text-xs text-[#7d8590] italic truncate max-w-[70px]">{s.nota}</span>}
+                  <button onClick={() => startEditSerie(i)} className="p-1 text-[#30363d] hover:text-[#58a6ff] transition-colors flex-shrink-0"><Pencil size={13} /></button>
+                  <button onClick={() => deleteSerie(i)} className="p-1 text-[#30363d] hover:text-[#f85149] transition-colors flex-shrink-0"><Trash2 size={14} /></button>
+                </div>
+              )
             ))}
           </div>
         </div>
